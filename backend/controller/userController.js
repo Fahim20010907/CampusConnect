@@ -137,8 +137,8 @@ export const toggleFollow = async (req, res) => {
         const { userId, targetUserId } = req.body;
         
         const [user, targetUser] = await Promise.all([
-            User.findById(userId),
-            User.findById(targetUserId)
+            user.findById(userId),
+            user.findById(targetUserId)
         ]);
         
         if (!user || !targetUser) {
