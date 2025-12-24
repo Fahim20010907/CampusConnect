@@ -1,9 +1,9 @@
+import PostFeed from "@/component/PostFeed";
 import Navbar from "../component/Navbar";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <Navbar></Navbar>
-      
+    <><Navbar></Navbar><PostFeed /></>
   );
 }

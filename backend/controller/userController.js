@@ -1,24 +1,23 @@
-import user from "../models/user.js";
-
+import User from "../models/user.js";
 
 // Create or update user
 export const createOrUpdateUser = async (req, res) => {
     try {
         const { name, email, photoURL } = req.body;
         
-        // Check if user exists
-        let user = await user.findOne({ email });
+        // Check if user exists by email
+        let existingUser = await User.findOne({ email });
         
-        if (user) {
+        if (existingUser) {
             // Update existing user
-            user.name = name || user.name;
-            user.profilePicture = photoURL || user.profilePicture;
-            user.updatedAt = Date.now();
-            await user.save();
+            existingUser.name = name || existingUser.name;
+            existingUser.profilePicture = photoURL || existingUser.profilePicture;
+            existingUser.updatedAt = Date.now();
+            await existingUser.save();
             
             return res.status(200).json({
                 success: true,
-                data: user,
+                data: existingUser,
                 message: "User updated successfully"
             });
         }
@@ -66,6 +65,35 @@ export const getUserById = async (req, res) => {
         });
     } catch (error) {
         console.error("Error fetching user:", error);
+        res.status(500).json({ 
+            success: false, 
+            message: error.message 
+        });
+    }
+};
+
+// Get user by email
+export const getUserByEmail = async (req, res) => {
+    try {
+        const { email } = req.params;
+        const user = await User.findOne({ email })
+            .select('-__v')
+            .populate('followers', 'name email profilePicture')
+            .populate('following', 'name email profilePicture');
+            
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+        
+        res.status(200).json({
+            success: true,
+            data: user
+        });
+    } catch (error) {
+        console.error("Error fetching user by email:", error);
         res.status(500).json({ 
             success: false, 
             message: error.message 
@@ -124,6 +152,43 @@ export const updateUserProfile = async (req, res) => {
         });
     } catch (error) {
         console.error("Error updating user:", error);
+        res.status(400).json({ 
+            success: false, 
+            message: error.message 
+        });
+    }
+};
+
+// Update user profile by email
+export const updateUserProfileByEmail = async (req, res) => {
+    try {
+        const { email } = req.params;
+        const updateData = req.body;
+        
+        // Find and update user by email
+        const user = await User.findOneAndUpdate(
+            { email: email },
+            { $set: updateData },
+            { 
+                new: true, 
+                runValidators: true 
+            }
+        ).select('-__v');
+        
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+        
+        res.status(200).json({
+            success: true,
+            data: user,
+            message: "Profile updated successfully"
+        });
+    } catch (error) {
+        console.error("Error updating user by email:", error);
         res.status(400).json({ 
             success: false, 
             message: error.message 

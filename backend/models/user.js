@@ -5,41 +5,16 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     bio: { type: String, default: "" },
-    department: { type: String, default: "" },
     profilePicture: { type: String, default: "" },
     role: { 
       type: String, 
-      enum: ['student', 'faculty', 'club_coordinator', 'admin'], 
+      enum: ['student', 'faculty', 'admin'], 
       default: 'student' 
     },
-    studentId: { type: String, default: "" },
-    phone: { type: String, default: "" },
-    year: { type: Number, default: 1 },
-    skills: [{ type: String }],
-    socialLinks: {
-      linkedin: { type: String, default: "" },
-      github: { type: String, default: "" },
-      twitter: { type: String, default: "" }
-    },
-    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    isVerified: { type: Boolean, default: false }
   },
   { 
-    timestamps: true,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    timestamps: true
   }
 );
-
-// Virtual for follower count
-userSchema.virtual('followerCount').get(function() {
-  return this.followers.length;
-});
-
-// Virtual for following count
-userSchema.virtual('followingCount').get(function() {
-  return this.following.length;
-});
 
 export default mongoose.model("User", userSchema);

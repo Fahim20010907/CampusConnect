@@ -21,8 +21,7 @@ import Image from "next/image";
 
 const ProfilePage = () => {
     const { id } = useParams();
-    const { user} = useContext(AuthContext);
-    console.log(user)
+    const { user } = useContext(AuthContext);
     const router = useRouter();
     const [profileUser, setProfileUser] = useState(null);
     const [mongoUser, setMongoUser] = useState(null);
@@ -41,26 +40,41 @@ const ProfilePage = () => {
         const fetchProfileData = async () => {
             try {
                 setLoading(true);
-
-                // Fetch from MongoDB
-                const mongoResponse = await fetch(`http://localhost:5000/api/users/${user.email}`);
-                if (mongoResponse.ok) {
-                    const mongoData = await mongoResponse.json();
-                    if (mongoData.success) {
-                        setMongoUser(mongoData.data);
-                        setFollowersCount(mongoData.data.followerCount || 0);
-                        setFollowingCount(mongoData.data.followingCount || 0);
+                
+                // If we have a MongoDB ID in params, fetch by ID
+                if (id && id.length === 24) {
+                    // Fetch from MongoDB by ID
+                    const mongoResponse = await fetch(`http://localhost:5000/api/users/${id}`);
+                    if (mongoResponse.ok) {
+                        const mongoData = await mongoResponse.json();
+                        if (mongoData.success) {
+                            setMongoUser(mongoData.data);
+                            setFollowersCount(mongoData.data.followerCount || 0);
+                            setFollowingCount(mongoData.data.followingCount || 0);
+                        }
+                    }
+                }
+                // If user is logged in and viewing own profile
+                else if (user && user.email) {
+                    // Fetch from MongoDB by email
+                    const mongoResponse = await fetch(`http://localhost:5000/api/users/email/${user.email}`);
+                    if (mongoResponse.ok) {
+                        const mongoData = await mongoResponse.json();
+                        if (mongoData.success) {
+                            setMongoUser(mongoData.data);
+                            setFollowersCount(mongoData.data.followerCount || 0);
+                            setFollowingCount(mongoData.data.followingCount || 0);
+                        }
                     }
                 }
 
-                // Fetch from Firebase Auth
-                // This would be better with a server component, but for client-side:
+                // Fetch from Firebase Auth if it's the current user's profile
                 if (user?.uid === id) {
                     setProfileUser(user);
                 }
 
                 // Check if current user is following this profile
-                if (user && id !== user.uid && mongoUser) {
+                if (user && id && mongoUser) {
                     const isUserFollowing = mongoUser.followers?.some(
                         follower => follower._id === user.uid || follower === user.uid
                     );
@@ -70,7 +84,7 @@ const ProfilePage = () => {
                 // Fetch user's posts from Firestore
                 const postsQuery = query(
                     collection(db, "posts"),
-                    where("userId", "==", id),
+                    where("userId", "==", id || user?.uid || ""),
                     orderBy("createdAt", "desc"),
                     limit(10)
                 );
@@ -85,7 +99,7 @@ const ProfilePage = () => {
                 // Fetch user's study materials
                 const materialsQuery = query(
                     collection(db, "materials"),
-                    where("userId", "==", id),
+                    where("userId", "==", id || user?.uid || ""),
                     orderBy("createdAt", "desc"),
                     limit(10)
                 );
@@ -109,9 +123,7 @@ const ProfilePage = () => {
             }
         };
 
-        if (id) {
-            fetchProfileData();
-        }
+        fetchProfileData();
     }, [id, user, db]);
 
     const handleFollow = async () => {
@@ -128,7 +140,7 @@ const ProfilePage = () => {
                 },
                 body: JSON.stringify({
                     userId: user.uid,
-                    targetUserId: id,
+                    targetUserId: mongoUser?._id || id,
                 }),
             });
 
@@ -189,7 +201,7 @@ const ProfilePage = () => {
         );
     }
 
-    const isOwnProfile = user?.uid === id;
+    const isOwnProfile = user?.uid === id || (mongoUser && user?.email === mongoUser.email);
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
