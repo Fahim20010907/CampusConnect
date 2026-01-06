@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics, isSupported } from "firebase/analytics";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -9,11 +9,21 @@ const firebaseConfig = {
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_storageBucket,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_messagingSenderId,
   appId: process.env.NEXT_PUBLIC_FIREBASE_appId,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_measurementId
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_measurementId,
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+
+// ✅ Initialize Analytics only in the browser
+let analytics;
+if (typeof window !== "undefined") {
+  // Check if Analytics is supported
+  isSupported().then((supported) => {
+    if (supported) {
+      analytics = getAnalytics(app);
+    }
+  });
+}
 
 export default app;

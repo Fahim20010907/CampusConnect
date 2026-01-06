@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
+   // _id: { type: String }, // Firebase UID
+
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     bio: { type: String, default: "" },
@@ -21,8 +23,9 @@ const userSchema = new mongoose.Schema(
       github: { type: String, default: "" },
       twitter: { type: String, default: "" }
     },
+    // ✅ Make followers/following arrays also store Firebase UID strings
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],    
     isVerified: { type: Boolean, default: false }
   },
   { 
