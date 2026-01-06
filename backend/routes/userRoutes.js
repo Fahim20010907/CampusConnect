@@ -6,15 +6,18 @@ import {
     updateUserProfile,
     toggleFollow,
     searchUsers,
-    createOrUpdateUser
+    createOrUpdateUser,
+    getUserByEmail
 } from "../controller/userController.js";
 
 const router = express.Router();
 
 // Public routes
-router.get("/", getUsers);
+router.get("/by-email/:email", getUserByEmail); // specific route FIRST
 router.get("/search", searchUsers);
-router.get("/:id", getUserById);
+router.get("/", getUsers);
+router.get("/:id", getUserById); // dynamic route LAST
+
 
 // Protected routes (add authentication middleware later)
 router.post("/", createOrUpdateUser);
