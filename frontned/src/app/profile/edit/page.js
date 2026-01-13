@@ -63,7 +63,7 @@ const EditProfile = () => {
         { value: "club_coordinator", label: "Club Coordinator" },
         { value: "admin", label: "Admin" }
     ];
-
+// <div className="min-h-screen bg-gradient-to-b from-gray-50 to-green-50 py-8">
     useEffect(() => {
         const fetchUserData = async () => {
             if (user?.email) {

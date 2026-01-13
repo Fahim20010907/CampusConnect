@@ -15,12 +15,9 @@ const Navbar = () => {
     const dropdownRef = useRef(null);
     const menuRef = useRef(null);
 
-    // Simplified navigation - only Home for now
+    // Simplified navigation
     const navLinks = [
         { name: "Home", path: "/", icon: "🏠" },
-        // Future pages can be added here:
-        // { name: "Internships", path: "/internships", icon: "💼" },
-        // { name: "Applications", path: "/applications", icon: "📄" },
     ];
 
     // Close dropdowns when clicking outside
@@ -29,7 +26,7 @@ const Navbar = () => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsProfileDropdownOpen(false);
             }
-            if (menuRef.current && !menuRef.current.contains(event.target) && 
+            if (menuRef.current && !menuRef.current.contains(event.target) &&
                 !event.target.closest('[data-menu-button]')) {
                 setIsMenuOpen(false);
             }
@@ -72,17 +69,17 @@ const Navbar = () => {
                 <div className="flex items-center justify-between h-16">
                     {/* Logo Section */}
                     <div className="flex items-center flex-shrink-0">
-                        <Link 
-                            href="/" 
+                        <Link
+                            href="/"
                             className="flex items-center space-x-3 group"
                             onClick={() => setIsMenuOpen(false)}
                         >
                             <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300 ring-2 ring-blue-500">
-                                <span className="text-blue-700 font-bold text-xl">IC</span>
+                                <span className="text-blue-700 font-bold text-xl">CC</span>
                             </div>
                             <div className="hidden lg:block">
                                 <h1 className="text-white font-bold text-xl tracking-tight">
-                                  CampusConnect
+                                    CampusConnect
                                 </h1>
                                 <p className="text-blue-100 text-xs">Career Management Platform</p>
                             </div>
@@ -97,7 +94,7 @@ const Navbar = () => {
                                     type="text"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    placeholder="Search internships, companies, roles..."
+                                    placeholder="Search posts, materials, users..."
                                     className="w-full pl-12 pr-10 py-2.5 rounded-full bg-white/15 backdrop-blur-sm text-white placeholder-blue-100 border border-white/25 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-all duration-300"
                                 />
                                 <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
@@ -137,15 +134,18 @@ const Navbar = () => {
                             </div>
                         </form>
                     </div>
+
+                    {/* Create Post Button */}
                     <button
-  onClick={() => router.push("/create-post")}
-  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mr-5"
->
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-  </svg>
-  <span>Create Post</span>
-</button>
+                        onClick={() => router.push("/create-post")}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mr-4"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span>Create Post</span>
+                    </button>
+
                     {/* Right Section - User Profile */}
                     <div className="flex items-center space-x-4">
                         {/* Desktop Navigation Links */}
@@ -155,8 +155,8 @@ const Navbar = () => {
                                     key={link.path}
                                     href={link.path}
                                     className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${pathname === link.path
-                                            ? "bg-white/25 text-white shadow-inner"
-                                            : "text-blue-100 hover:bg-white/15 hover:text-white"
+                                        ? "bg-white/25 text-white shadow-inner"
+                                        : "text-blue-100 hover:bg-white/15 hover:text-white"
                                         }`}
                                 >
                                     <span className="text-lg">{link.icon}</span>
@@ -193,7 +193,7 @@ const Navbar = () => {
                                         <p className="text-white font-medium text-sm">
                                             {user.displayName || user.email?.split("@")[0]}
                                         </p>
-                                        <p className="text-blue-100 text-xs">Intern</p>
+                                        <p className="text-blue-100 text-xs">Student</p>
                                     </div>
                                     <svg
                                         className={`w-5 h-5 text-white transition-transform duration-200 ${isProfileDropdownOpen ? "rotate-180" : ""
@@ -283,27 +283,6 @@ const Navbar = () => {
                                                     />
                                                 </svg>
                                                 <span>Dashboard</span>
-                                            </Link>
-
-                                            <Link
-                                                href="/applications"
-                                                className="flex items-center space-x-3 px-4 py-3 hover:bg-blue-50 text-gray-700 hover:text-blue-600 transition-colors"
-                                                onClick={() => setIsProfileDropdownOpen(false)}
-                                            >
-                                                <svg
-                                                    className="w-5 h-5"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth="2"
-                                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                                    />
-                                                </svg>
-                                                <span>My Applications</span>
                                             </Link>
 
                                             <Link
@@ -410,7 +389,7 @@ const Navbar = () => {
 
                 {/* Mobile Menu */}
                 {isMenuOpen && (
-                    <div 
+                    <div
                         ref={menuRef}
                         className="lg:hidden bg-white rounded-xl shadow-2xl mt-2 p-4 animate-slideDown border border-blue-100"
                     >
@@ -441,7 +420,7 @@ const Navbar = () => {
                             </div>
                         ) : (
                             <div className="mb-4 pb-4 border-b border-gray-100">
-                                <p className="text-gray-700 font-medium mb-2">Welcome to InternConnect</p>
+                                <p className="text-gray-700 font-medium mb-2">Welcome to CampusConnect</p>
                             </div>
                         )}
 
@@ -452,8 +431,8 @@ const Navbar = () => {
                                     key={link.path}
                                     href={link.path}
                                     className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${pathname === link.path
-                                            ? "bg-blue-50 text-blue-600"
-                                            : "text-gray-700 hover:bg-gray-100"
+                                        ? "bg-blue-50 text-blue-600"
+                                        : "text-gray-700 hover:bg-gray-100"
                                         }`}
                                     onClick={() => setIsMenuOpen(false)}
                                 >
@@ -462,10 +441,44 @@ const Navbar = () => {
                                 </Link>
                             ))}
 
+                            {/* Create Post Button - Mobile */}
+                            <button
+                                onClick={() => {
+                                    router.push("/create-post");
+                                    setIsMenuOpen(false);
+                                }}
+                                className="w-full flex items-center space-x-3 px-4 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-lg mt-2"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span>Create Post</span>
+                            </button>
+
                             {/* Mobile Additional Links */}
                             <div className="pt-2 border-t border-gray-100">
                                 {user ? (
                                     <>
+                                        <Link
+                                            href={`/profile/${user.uid}`}
+                                            className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg"
+                                            onClick={() => setIsMenuOpen(false)}
+                                        >
+                                            <svg
+                                                className="w-5 h-5 text-blue-500"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                                />
+                                            </svg>
+                                            <span>My Profile</span>
+                                        </Link>
                                         <Link
                                             href="/dashboard"
                                             className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg"
@@ -485,26 +498,6 @@ const Navbar = () => {
                                                 />
                                             </svg>
                                             <span>Dashboard</span>
-                                        </Link>
-                                        <Link
-                                            href="/applications"
-                                            className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg"
-                                            onClick={() => setIsMenuOpen(false)}
-                                        >
-                                            <svg
-                                                className="w-5 h-5 text-blue-500"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                                />
-                                            </svg>
-                                            <span>My Applications</span>
                                         </Link>
                                         <button
                                             onClick={handleLogout}

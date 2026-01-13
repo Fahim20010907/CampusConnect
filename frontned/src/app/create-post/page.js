@@ -8,7 +8,7 @@ import Navbar from "../../component/Navbar";
 const CreatePostPage = () => {
   const { user, loading } = useContext(AuthContext);
   const router = useRouter();
-  
+
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
   const [previewUrls, setPreviewUrls] = useState([]);
@@ -41,7 +41,7 @@ const CreatePostPage = () => {
   // Handle image upload
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
-    
+
     if (files.length + images.length > 5) {
       setError("Maximum 5 images allowed");
       return;
@@ -59,7 +59,7 @@ const CreatePostPage = () => {
       // Create preview
       const objectUrl = URL.createObjectURL(file);
       newPreviews.push(objectUrl);
-      
+
       // Convert to base64 for backend
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -77,12 +77,12 @@ const CreatePostPage = () => {
   const removeImage = (index) => {
     const newImages = [...images];
     const newPreviews = [...previewUrls];
-    
+
     URL.revokeObjectURL(newPreviews[index]);
-    
+
     newImages.splice(index, 1);
     newPreviews.splice(index, 1);
-    
+
     setImages(newImages);
     setPreviewUrls(newPreviews);
   };
@@ -90,7 +90,7 @@ const CreatePostPage = () => {
   // Submit post
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!content.trim()) {
       setError("Please write something for your post");
       return;
@@ -121,11 +121,11 @@ const CreatePostPage = () => {
       });
 
       const responseData = await response.json();
-      
+
       if (response.ok) {
         // Clean up preview URLs
         previewUrls.forEach(url => URL.revokeObjectURL(url));
-        
+
         // Redirect to home or post page
         router.push("/");
       } else {
@@ -142,7 +142,7 @@ const CreatePostPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <Navbar />
-      
+
       <div className="max-w-2xl mx-auto px-4 py-8">
         <div className="bg-white rounded-xl shadow-lg p-6">
           {/* Header */}
@@ -188,7 +188,7 @@ const CreatePostPage = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Add Images (Optional)
               </label>
-              
+
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
                 <input
                   type="file"

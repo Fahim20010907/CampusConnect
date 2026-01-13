@@ -1,11 +1,17 @@
 import express from "express";
-import { 
+import {
   createPost,
   getPosts,
   getPostById,
   toggleLike,
   addComment,
-  getUserPosts
+  getUserPosts,
+  toggleCommentLike,
+  addReply,
+  deletePost,
+  deleteComment,
+  deleteReply,
+  editPost
 } from "../controller/postController.js";
 
 const router = express.Router();
@@ -19,5 +25,13 @@ router.get("/user/:email", getUserPosts);
 router.post("/", createPost);
 router.post("/like", toggleLike);
 router.post("/comment", addComment);
+router.post("/comment/like", toggleCommentLike);
+router.post("/comment/reply", addReply);
+router.put("/", editPost);  // Add edit route
+
+// Delete routes
+router.delete("/", deletePost);
+router.delete("/comment", deleteComment);
+router.delete("/comment/reply", deleteReply);
 
 export default router;
